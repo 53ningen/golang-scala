@@ -39,8 +39,9 @@ class Parser extends JavaTokenParsers {
 trait AST
 
 case class Stmt(left: AST, right: AST) extends AST
-case class IfStmt(condition: AST, consequence: AST, alternative: AST) extends AST
+case class DoNothingStmt(env: Environment) extends AST
 case class AssignStmt(name: String, expr: AST) extends AST
+case class IfStmt(condition: AST, consequence: AST, alternative: AST) extends AST
 case class PrintlnStmt(body: AST) extends AST
 
 case class BinOpExpr(left: AST, op: String, right: AST) extends AST

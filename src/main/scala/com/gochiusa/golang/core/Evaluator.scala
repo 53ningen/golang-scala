@@ -7,6 +7,7 @@ class Evaluator {
         case true => eval(cons, env)
         case false => eval(alt, env)
       }
+      case AssignStmt(name, expr) => DoNothingStmt(env.set(name, expr))
       case BinOpExpr(left, op, right) => (eval(left, env), op, eval(right, env)) match {
         case (left: Double, _, right: Double) => op match {
           case "+" => left + right
