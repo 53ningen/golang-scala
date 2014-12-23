@@ -74,6 +74,12 @@ class EvaluatorSpec extends Specification {
       val expected = "佐倉綾音"
       result mustEqual expected
     }
+
+    "Assign文を評価するとDoNothingStmtになる" in {
+      val result = evaluator.eval(AssignStmt("香風智乃", StringValue("かわいい")), env)
+      val expected = DoNothingStmt(Environment(Map("香風智乃" -> StringValue("かわいい"))))
+      result mustEqual expected
+    }
   }
 
 }
