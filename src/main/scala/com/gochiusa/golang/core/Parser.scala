@@ -11,15 +11,6 @@ class Parser extends JavaTokenParsers {
   protected val whileKeyword = "while"
   protected val printKeyword = "println"
 
-
-  /**
-   * statements ::= statement | statement; statement
-   * statement  ::= expression
-   * expression ::=
-   *
-   * @return
-   */
-
   // statement
   def stmts: Parser[AST] = chainl1(stmt|expr, ";" ^^ { _ => (left: AST, right: AST) => Statements(left, right)}) | stmt
   def stmt: Parser[AST] = assignStmt | ifExpr | printlnStmt
@@ -27,10 +18,9 @@ class Parser extends JavaTokenParsers {
   def assignStmt: Parser[AST] = varKeyword~>ident~"="~expr ^^ { case id~_~exp => AssignStmt(id, exp) }
   def printlnStmt: Parser[AST] = printKeyword~"("~>expr~")" ^^ { case expr~_ => PrintlnStmt(expr) }
 
-
   // expression: 邪悪・要整理
   def expr: Parser[AST] = ifExpr | relOpExp | bool | binOpExpr | primitive | identifier
-  def ifExpr: Parser[AST] = "if"~"("~>expr~")"~"{"~expr~"}"~elseKeyword~"{"~expr<~"}" ^^ { case cond~_~_~cons~_~_~_~alt => IfStmt(cond, cons, alt) }
+  def ifExpr: Parser[AST] = ifKeyword~"("~>expr~")"~"{"~expr~"}"~elseKeyword~"{"~expr<~"}" ^^ { case cond~_~_~cons~_~_~_~alt => IfStmt(cond, cons, alt) }
   def relOpExp: Parser[AST] = (identifier|number) ~ ("<"|">"|"<="|">="|"=="|"!=") ~ (identifier|number) ^^ { case left ~ op ~ right => RelOpExpr(left, op, right)}
   def binOpExpr: Parser[AST] = binTermOpExpr
   def binTermOpExpr: Parser[AST] = chainl1(binFactorOpExpr, ("+"|"-")^^{ op => (left: AST, right: AST) => BinOpExpr(left, op, right)})
