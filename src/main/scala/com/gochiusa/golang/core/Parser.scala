@@ -22,24 +22,24 @@ class Parser extends JavaTokenParsers {
 
   // statement
   def stmts: Parser[AST] = chainl1(stmt|expr, ";" ^^ { _ => (left: AST, right: AST) => Statements(left, right)}) | stmt
-  def stmt: Parser[AST] = assignStmt | ifStmt | printlnStmt
-  def ifStmt: Parser[AST] = ifKeyword~expr~"{"~(expr|stmts)~"}"~elseKeyword~"{"~(expr|stmts)~"}" ^^ { case ifKeyword~cond~"{"~cons~"}"~elseKeyword~"{"~alt~"}" => IfStmt(cond, cons, alt) }
+  def stmt: Parser[AST] = assignStmt | ifExpr | printlnStmt
 
   def assignStmt: Parser[AST] = varKeyword~>ident~"="~expr ^^ { case id~_~exp => AssignStmt(id, exp) }
   def printlnStmt: Parser[AST] = printKeyword~"("~>expr~")" ^^ { case expr~_ => PrintlnStmt(expr) }
 
-  // expression
-  def expr: Parser[AST] = identifier | binOpExpr | relOpExp | primitive
 
+  // expression: 邪悪・要整理
+  def expr: Parser[AST] = ifExpr | relOpExp | bool | binOpExpr | primitive | identifier
+  def ifExpr: Parser[AST] = "if"~"("~>expr~")"~"{"~expr~"}"~elseKeyword~"{"~expr<~"}" ^^ { case cond~_~_~cons~_~_~_~alt => IfStmt(cond, cons, alt) }
   def relOpExp: Parser[AST] = (identifier|number) ~ ("<"|">"|"<="|">="|"=="|"!=") ~ (identifier|number) ^^ { case left ~ op ~ right => RelOpExpr(left, op, right)}
-
-  def binOpExpr: Parser[AST] = additionOpExpr | multiplyOpExpr
-  def additionOpExpr: Parser[AST] = chainl1(multiplyOpExpr, ("+"|"-")^^{ op => (left: AST, right: AST) => BinOpExpr(left, op, right)})
-  def multiplyOpExpr: Parser[AST] = chainl1(number, ("*"|"/")^^{ op => (left: AST, right: AST) => BinOpExpr(left, op, right)})
+  def binOpExpr: Parser[AST] = binTermOpExpr
+  def binTermOpExpr: Parser[AST] = chainl1(binFactorOpExpr, ("+"|"-")^^{ op => (left: AST, right: AST) => BinOpExpr(left, op, right)})
+  def binFactorOpExpr: Parser[AST] = chainl1(numberExpr, ("*"|"/")^^{ op => (left: AST, right: AST) => BinOpExpr(left, op, right)})
+  def numberExpr: Parser[AST] = identifier | floatingPointNumber ^^ { v => NumberValue(v.toDouble) } | "("~>expr<~")"
 
   // primitive
   def primitive = string | number | bool
-  def number: Parser[AST] = identifier | floatingPointNumber ^^ { v => NumberValue(v.toDouble) } | "("~>expr<~")"
+  def number: Parser[AST] = floatingPointNumber ^^ { v => NumberValue(v.toDouble) }
   def identifier: Parser[AST] = ident ^^ { n => IdentifierExpr(n) }
   def bool: Parser[AST] = ("true"|"false") ^^ { b => BooleanValue(b.toBoolean) }
   def string: Parser[AST] = stringLiteral ^^ { str => StringValue(str.substring(1, str.length - 1)) }
