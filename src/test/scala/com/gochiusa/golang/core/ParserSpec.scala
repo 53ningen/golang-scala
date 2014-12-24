@@ -33,7 +33,7 @@ class ParserSpec extends Specification {
     }
 
     "識別子をパースできる" in {
-      val result = parser.parseAll(parser.identifierExpr, "cocoa")
+      val result = parser.parseAll(parser.identifier, "cocoa")
       val expected = IdentifierExpr("cocoa")
       result.get mustEqual expected
     }
@@ -62,17 +62,38 @@ class ParserSpec extends Specification {
       result.get mustEqual expected
     }
 
+    "単純な括弧つきの変数を含む数式をパースできる" in {
+      val result = parser.parseAll(parser.binOpExpr, "(128+367*x)*3620")
+      val expected = BinOpExpr(BinOpExpr(NumberValue(128), "+", BinOpExpr(NumberValue(367), "*", IdentifierExpr("x"))), "*", NumberValue(3620))
+      result.get mustEqual expected
+    }
+
     "そこそこ複雑な数式をパースできる" in {
-      val result = parser.parseAll(parser.binOpExpr, "(33-4)*(334+33×4-3×3×4)")
-      val expected = BinOpExpr(BinOpExpr(NumberValue(33), "-", NumberValue(4)), "*", BinOpExpr(NumberValue(334), "+", BinOpExpr(BinOpExpr(NumberValue(33), "*", NumberValue(4)), "-", BinOpExpr(NumberValue(3), "*", BinOpExpr(NumberValue(3), "*" , NumberValue(4))))))
+      val result = parser.parseAll(parser.binOpExpr, "(33-4)*(334+33*4-3*3*4)")
+      val expected = BinOpExpr(BinOpExpr(NumberValue(33.0), "-", NumberValue(4.0)), "*", BinOpExpr(BinOpExpr(NumberValue(334.0), "+", BinOpExpr(NumberValue(33.0), "*", NumberValue(4.0))), "-", BinOpExpr(BinOpExpr(NumberValue(3.0), "*", NumberValue(3.0)), "*", NumberValue(4.0))))
+      result.get mustEqual expected
+    }
+
+    "変数を含むそこそこ複雑な数式をパースできる" in {
+      val result = parser.parseAll(parser.binOpExpr, "(33-x)*(334+33*4-3*3*4)")
+      val expected = BinOpExpr(BinOpExpr(NumberValue(33), "-", IdentifierExpr("x")), "*", BinOpExpr(BinOpExpr(NumberValue(334.0), "+", BinOpExpr(NumberValue(33.0), "*", NumberValue(4.0))), "-", BinOpExpr(BinOpExpr(NumberValue(3.0), "*", NumberValue(3.0)), "*", NumberValue(4.0))))
+      result.get mustEqual expected
+    }
+
+    "If文をパースできる" in {
+      val result = parser.parse(parser.stmts, "if x > 12470 { println(\"ティッピーゴールデンフラワリーオレンジペコ\") } else { println(\"清川元夢\") }")
+      val expected = IfStmt(RelOpExpr(IdentifierExpr("x"), ">", NumberValue(12470)), PrintlnStmt(StringValue("ティッピーゴールデンフラワリーオレンジペコ")), PrintlnStmt(StringValue("清川元夢")))
+
       result.get mustEqual expected
     }.pendingUntilFixed("まぁいっか！（適当）")
 
-    "変数を含むそこそこ複雑な数式をパースできる" in {
-      val result = parser.parseAll(parser.binOpExpr, "(33-4)*(334+33×4-3×3×4)")
-      val expected = BinOpExpr(BinOpExpr(NumberValue(33), "-", NumberValue(4)), "*", BinOpExpr(NumberValue(334), "+", BinOpExpr(BinOpExpr(NumberValue(33), "*", NumberValue(4)), "-", BinOpExpr(NumberValue(3), "*", BinOpExpr(NumberValue(3), "*" , NumberValue(4))))))
+    "If文をパースできる" in {
+      val result = parser.parse(parser.stmts, "if x > 12470 { \"ティッピーゴールデンフラワリーオレンジペコ\" } else { \"清川元夢\" }")
+      val expected = IfStmt(RelOpExpr(IdentifierExpr("x"), ">", NumberValue(12470)), StringValue("ティッピーゴールデンフラワリーオレンジペコ"), StringValue("清川元夢"))
+
       result.get mustEqual expected
     }.pendingUntilFixed("まぁいっか！（適当）")
+
 
   }
 

@@ -57,6 +57,18 @@ class EvaluatorSpec extends Specification {
       result mustEqual expected
     }
 
+    "そこそこ複雑な数式をパースできる" in {
+      val result = evaluator.eval(BinOpExpr(BinOpExpr(NumberValue(33.0), "-", NumberValue(4.0)), "*", BinOpExpr(BinOpExpr(NumberValue(334.0), "+", BinOpExpr(NumberValue(33.0), "*", NumberValue(4.0))), "-", BinOpExpr(BinOpExpr(NumberValue(3.0), "*", NumberValue(3.0)), "*", NumberValue(4.0)))), env)
+      val expected = 12470
+      result mustEqual expected
+    }
+
+    "変数を含むそこそこ複雑な数式をパースできる" in {
+      val result = evaluator.eval(BinOpExpr(BinOpExpr(NumberValue(33), "-", IdentifierExpr("x")), "*", BinOpExpr(BinOpExpr(NumberValue(334.0), "+", BinOpExpr(NumberValue(33.0), "*", NumberValue(4.0))), "-", BinOpExpr(BinOpExpr(NumberValue(3.0), "*", NumberValue(3.0)), "*", NumberValue(4.0)))), env.set("x", NumberValue(4)))
+      val expected = 12470
+      result mustEqual expected
+    }
+
     "If文を評価できる：true編" in {
       val result = evaluator.eval(IfStmt(BooleanValue(true), StringValue("佐倉綾音"), StringValue("徳井青空")), env)
       val expected = "佐倉綾音"
@@ -75,9 +87,27 @@ class EvaluatorSpec extends Specification {
       result mustEqual expected
     }
 
-    "Assign文を評価するとDoNothingStmtになる" in {
+    "If文を評価できる：Statement" in {
+      val result = evaluator.eval(IfStmt(RelOpExpr(IdentifierExpr("x"), ">", NumberValue(12470)), PrintlnStmt(StringValue("ティッピーゴールデンフラワリーオレンジペコ")), PrintlnStmt(StringValue("清川元夢"))), env.set("x", NumberValue(367)))
+      val expected = DoNothingStmt(env.set("x", NumberValue(367)))
+      result mustEqual expected
+    }
+
+    "Assign文を評価すると環境を更新したDoNothingStmtを返す" in {
       val result = evaluator.eval(AssignStmt("香風智乃", StringValue("かわいい")), env)
       val expected = DoNothingStmt(Environment(Map("香風智乃" -> StringValue("かわいい"))))
+      result mustEqual expected
+    }
+
+    "Println文を評価するとDoNothingStmtを返す" in {
+      val result = evaluator.eval(PrintlnStmt(StringValue("マジなパンだからね！本気で可愛い子ぶってるんだよ！")), env)
+      val expected = DoNothingStmt(env)
+      result mustEqual expected
+    }
+
+    "Statementsを評価できる" in {
+      val result = evaluator.eval(Statements(DoNothingStmt(env), StringValue("")), env)
+      val expected = ""
       result mustEqual expected
     }
   }

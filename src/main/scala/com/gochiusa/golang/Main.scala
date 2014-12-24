@@ -17,7 +17,7 @@ object Main {
     val evaluator = new Evaluator
 
     if (args.length > 1) {
-      val result = parser.parseAll(parser.stmt, args(1))
+      val result = parser.parseAll(parser.stmts, args(1))
       evaluator.eval(result.get, Environment(Map()))
     }
 
