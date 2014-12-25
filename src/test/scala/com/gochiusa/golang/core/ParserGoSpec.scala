@@ -34,7 +34,7 @@ class ParserGoSpec extends Specification {
     }
 
     "Assign文をパースできる" in {
-      val result = parser.parse(parser.stmt, "var order = \"そのうさぎさん\"")
+      val result = parser.parse(parser.stmts, "var order = \"そのうさぎさん\"")
       val expected = AssignStmt("order", StringValue("そのうさぎさん"))
       result.get mustEqual expected
     }
