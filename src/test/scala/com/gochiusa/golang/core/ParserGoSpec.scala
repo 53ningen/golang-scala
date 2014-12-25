@@ -29,7 +29,7 @@ class ParserGoSpec extends Specification {
 
     "If文をパースできる" in {
       val result = parser.parse(parser.expr, "心ぴょんぴょん (x > 12470) { \"ティッピーゴールデンフラワリーオレンジペコ\" } 待ち？ { \"清川元夢\" }")
-      val expected = IfStmt(RelOpExpr(IdentifierExpr("x"), ">", NumberValue(12470)), StringValue("ティッピーゴールデンフラワリーオレンジペコ"), StringValue("清川元夢"))
+      val expected = IfExpr(RelOpExpr(IdentifierExpr("x"), ">", NumberValue(12470)), StringValue("ティッピーゴールデンフラワリーオレンジペコ"), StringValue("清川元夢"))
       result.get mustEqual expected
     }
 

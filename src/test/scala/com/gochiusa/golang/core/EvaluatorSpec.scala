@@ -70,25 +70,25 @@ class EvaluatorSpec extends Specification {
     }
 
     "If文を評価できる：true編" in {
-      val result = evaluator.eval(IfStmt(BooleanValue(true), StringValue("佐倉綾音"), StringValue("徳井青空")), env)
+      val result = evaluator.eval(IfExpr(BooleanValue(true), StringValue("佐倉綾音"), StringValue("徳井青空")), env)
       val expected = "佐倉綾音"
       result mustEqual expected
     }
 
     "If文を評価できる：false編" in {
-      val result = evaluator.eval(IfStmt(BooleanValue(false), StringValue("佐倉綾音"), StringValue("徳井青空")), env)
+      val result = evaluator.eval(IfExpr(BooleanValue(false), StringValue("佐倉綾音"), StringValue("徳井青空")), env)
       val expected = "徳井青空"
       result mustEqual expected
     }
 
     "If文を評価できる：環境の値を使える" in {
-      val result = evaluator.eval(IfStmt(IdentifierExpr("is百合"), StringValue("佐倉綾音"), StringValue("徳井青空")), env.set("is百合", BooleanValue(true)))
+      val result = evaluator.eval(IfExpr(IdentifierExpr("is百合"), StringValue("佐倉綾音"), StringValue("徳井青空")), env.set("is百合", BooleanValue(true)))
       val expected = "佐倉綾音"
       result mustEqual expected
     }
 
     "If文を評価できる：Statement" in {
-      val result = evaluator.eval(IfStmt(RelOpExpr(IdentifierExpr("x"), ">", NumberValue(12470)), PrintlnStmt(StringValue("ティッピーゴールデンフラワリーオレンジペコ")), PrintlnStmt(StringValue("清川元夢"))), env.set("x", NumberValue(367)))
+      val result = evaluator.eval(IfExpr(RelOpExpr(IdentifierExpr("x"), ">", NumberValue(12470)), PrintlnStmt(StringValue("ティッピーゴールデンフラワリーオレンジペコ")), PrintlnStmt(StringValue("清川元夢"))), env.set("x", NumberValue(367)))
       val expected = DoNothingStmt(env.set("x", NumberValue(367)))
       result mustEqual expected
     }

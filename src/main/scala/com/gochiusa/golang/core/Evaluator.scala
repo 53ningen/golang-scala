@@ -9,13 +9,12 @@ class Evaluator {
         case (_, right: DoNothingStmt) => eval(left, env)
         case (_, _) =>
       }
-      case IfStmt(cond, cons, alt) => eval(cond, env) match {
+      case IfExpr(cond, cons, alt) => eval(cond, env) match {
         case true => eval(cons, env)
         case false => eval(alt, env)
       }
       case AssignStmt(name, expr) => DoNothingStmt(env.set(name, expr))
-      case PrintlnStmt(expr) => println(eval(expr, env)); DoNothingStmt(env)
-
+      case PrintlnStmt(expr) => printOut(eval(expr, env)); DoNothingStmt(env)
       case BinOpExpr(left, op, right) => (eval(left, env), op, eval(right, env)) match {
         case (left: Double, _, right: Double) => op match {
           case "+" => left + right
@@ -47,5 +46,9 @@ class Evaluator {
       case BooleanValue(value) => value
       case StringValue(value) => value
     }
+  }
+
+  def printOut(any: Any) {
+    println(any.toString)
   }
 }
