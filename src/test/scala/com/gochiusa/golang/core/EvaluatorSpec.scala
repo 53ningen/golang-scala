@@ -123,8 +123,37 @@ class EvaluatorSpec extends Specification {
 
     "複数の数字を評価できる" in {
       val result = evaluator.eval(Statements(Statements(Statements(NumberValue(1.0), NumberValue(2.0)), NumberValue(3.0)), NumberValue(4.0)), env)
-      val expected = ()
+      val expected = 4.0
       result mustEqual expected
+    }
+
+    "Assign文と式のちょっと複雑な組み合わせを評価できる：その１" in {
+      var stdouts: List[String] = List()
+      val evaluator = new Evaluator {
+        override def printOut(any: Any): Unit = {
+          stdouts = stdouts ++ List(any.toString)
+        }
+      }
+      // var x = 367;
+      // if (x > 12470) { println("ティッピーゴールデンフラワリーオレンジペコ") } else { "清川元夢" };
+      // var y = "ご注文はうさぎですか?"
+      val result = evaluator.eval(Statements(Statements(AssignStmt("x", NumberValue(367)), IfExpr(RelOpExpr(IdentifierExpr("x"), ">", NumberValue(12470)), PrintlnStmt(StringValue("ティッピーゴールデンフラワリーオレンジペコ")), StringValue("清川元夢"))), AssignStmt("y", StringValue("ご注文はうさぎですか?"))), env)
+      val expected = DoNothingStmt(Environment(Map("y" -> StringValue("ご注文はうさぎですか?"))))
+      result mustEqual expected
+      stdouts mustEqual List()
+    }
+
+    "Assign文と式のちょっと複雑な組み合わせを評価できる：その２" in {
+      var stdouts: List[String] = List()
+      val evaluator = new Evaluator {
+        override def printOut(any: Any): Unit = {
+          stdouts = stdouts ++ List(any.toString)
+        }
+      }
+      val result = evaluator.eval(Statements(Statements(AssignStmt("x", NumberValue(367)), IfExpr(RelOpExpr(IdentifierExpr("x"), "<", NumberValue(12470)), PrintlnStmt(StringValue("ティッピーゴールデンフラワリーオレンジペコ")), StringValue("清川元夢"))), AssignStmt("y", StringValue("ご注文はうさぎですか?"))), env)
+      val expected = DoNothingStmt(Environment(Map("x" -> NumberValue(367.0), "y" -> StringValue("ご注文はうさぎですか?"))))
+      result mustEqual expected
+      stdouts mustEqual List("ティッピーゴールデンフラワリーオレンジペコ")
     }
   }
 
