@@ -106,13 +106,13 @@ class ParserSpec extends Specification {
 
     "複数の数字をパースできる" in {
       val result = parser.parse(parser.stmts, "1;2;3;4;")
-      val expected = Statements(Statements(Statements(NumberValue(1.0),NumberValue(2.0)),NumberValue(3.0)),NumberValue(4.0))
+      val expected = Statements(Statements(Statements(NumberValue(1.0), NumberValue(2.0)), NumberValue(3.0)), NumberValue(4.0))
       result.get mustEqual expected
     }
 
     "Assign文と式の組み合わせをパースできる" in {
       val result = parser.parse(parser.stmts, "var x = \"Is the Order a Rabbit?\"; var y = \"ご注文はうさぎですか?\"")
-      val expected = Statements(AssignStmt("x",StringValue("Is the Order a Rabbit?")), AssignStmt("y",StringValue("ご注文はうさぎですか?")))
+      val expected = Statements(AssignStmt("x", StringValue("Is the Order a Rabbit?")), AssignStmt("y", StringValue("ご注文はうさぎですか?")))
       result.get mustEqual expected
     }
 
@@ -121,14 +121,14 @@ class ParserSpec extends Specification {
       val expected =
         Statements(
           Statements(
-            AssignStmt("x",StringValue("Is the Order a Rabbit?")),
+            AssignStmt("x", StringValue("Is the Order a Rabbit?")),
             IfExpr(
               RelOpExpr(IdentifierExpr("x"), ">", NumberValue(12470)),
               PrintlnStmt(StringValue("ティッピーゴールデンフラワリーオレンジペコ")),
               StringValue("清川元夢")
             )
           ),
-          AssignStmt("y",StringValue("ご注文はうさぎですか?"))
+          AssignStmt("y", StringValue("ご注文はうさぎですか?"))
         )
       result.get mustEqual expected
     }

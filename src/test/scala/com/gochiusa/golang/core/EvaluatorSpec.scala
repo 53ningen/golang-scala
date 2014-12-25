@@ -122,7 +122,7 @@ class EvaluatorSpec extends Specification {
     }
 
     "複数の数字を評価できる" in {
-      val result = evaluator.eval(Statements(Statements(Statements(NumberValue(1.0),NumberValue(2.0)),NumberValue(3.0)),NumberValue(4.0)), env)
+      val result = evaluator.eval(Statements(Statements(Statements(NumberValue(1.0), NumberValue(2.0)), NumberValue(3.0)), NumberValue(4.0)), env)
       val expected = ()
       result mustEqual expected
     }
