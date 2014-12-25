@@ -4,7 +4,11 @@ import org.specs2.mutable.Specification
 
 class EvaluatorSpec extends Specification {
 
-  val evaluator = new Evaluator
+  val evaluator = new Evaluator {
+    override def printOut(any: Any): Unit = {
+
+    }
+  }
   val env = Environment(Map())
 
   "Evaluator" should {
