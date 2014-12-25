@@ -14,9 +14,10 @@ class Parser extends JavaTokenParsers {
   protected val falseKeyword = "false"
 
   // statement
-  def stmts: Parser[AST] = chainl1(stmt | expr, ";" ^^ { _ => (left: AST, right: AST) => Statements(left, right)}) | stmt
 
-  def stmt: Parser[AST] =  assignStmt | expr
+  def stmts: Parser[AST] =  chainl1(stms, ";" ^^ { _ => (left: AST, right: AST) => Statements(left, right) })
+
+  def stms: Parser[AST] = assignStmt | expr
 
   def assignStmt: Parser[AST] = varKeyword ~> ident ~ "=" ~ expr ^^ { case id ~ _ ~ exp => AssignStmt(id, exp)}
 

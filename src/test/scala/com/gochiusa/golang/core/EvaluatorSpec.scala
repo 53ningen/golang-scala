@@ -4,7 +4,11 @@ import org.specs2.mutable.Specification
 
 class EvaluatorSpec extends Specification {
 
-  val evaluator = new Evaluator
+  val evaluator = new Evaluator {
+    override def printOut(any: Any): Unit = {
+
+    }
+  }
   val env = Environment(Map())
 
   "Evaluator" should {
@@ -114,6 +118,12 @@ class EvaluatorSpec extends Specification {
     "Statementsを評価できる" in {
       val result = evaluator.eval(Statements(DoNothingStmt(env), StringValue("")), env)
       val expected = ""
+      result mustEqual expected
+    }
+
+    "複数の数字を評価できる" in {
+      val result = evaluator.eval(Statements(Statements(Statements(NumberValue(1.0), NumberValue(2.0)), NumberValue(3.0)), NumberValue(4.0)), env)
+      val expected = ()
       result mustEqual expected
     }
   }
