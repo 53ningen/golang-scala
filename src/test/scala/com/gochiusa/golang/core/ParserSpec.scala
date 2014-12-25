@@ -133,6 +133,14 @@ class ParserSpec extends Specification {
       result.get mustEqual expected
     }
 
+    "複数のprintln文をパースできる" in {
+      val result = parser.parse(parser.stmts, "println(\"ティッピーゴールデンフラワリーオレンジペコ\"); println(\"ティッピーゴールデンフラワリーオレンジペコ\"); println(\"ティッピーゴールデンフラワリーオレンジペコ\");")
+      val expected = Statements(Statements(PrintlnStmt(StringValue("ティッピーゴールデンフラワリーオレンジペコ")),PrintlnStmt(StringValue("ティッピーゴールデンフラワリーオレンジペコ"))),PrintlnStmt(StringValue("ティッピーゴールデンフラワリーオレンジペコ")))
+
+      result.get mustEqual expected
+    }
+
+
   }
 
 }
