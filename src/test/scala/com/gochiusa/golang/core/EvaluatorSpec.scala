@@ -93,6 +93,12 @@ class EvaluatorSpec extends Specification {
       result mustEqual expected
     }
 
+    "If式のネストを評価できる" in {
+      val result = evaluator.eval(IfExpr(RelOpExpr(IdentifierExpr("x"), "<", NumberValue(12470.0)), IfExpr(RelOpExpr(IdentifierExpr("y"), ">", NumberValue(367.0)), StringValue("ティッピーゴールデンフラワリーオレンジペコ"), StringValue("あんこ")), StringValue("清川元夢")), env.set("x", NumberValue(367)).set("y", NumberValue(3620)))
+      val expected = "ティッピーゴールデンフラワリーオレンジペコ"
+      result mustEqual expected
+    }
+
     "Assign文を評価すると環境を更新したDoNothingStmtを返す" in {
       val result = evaluator.eval(AssignStmt("香風智乃", StringValue("かわいい")), env)
       val expected = DoNothingStmt(Environment(Map("香風智乃" -> StringValue("かわいい"))))

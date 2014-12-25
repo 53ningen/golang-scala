@@ -86,6 +86,12 @@ class ParserSpec extends Specification {
       result.get mustEqual expected
     }
 
+    "If式のネストをパースできる" in {
+      val result = parser.parse(parser.stmt, "if (x > 12470) { if ( y > 367){ \"ティッピーゴールデンフラワリーオレンジペコ\"} else {  \"あんこ\"  }  } else { \"清川元夢\" }")
+      val expected = IfExpr(RelOpExpr(IdentifierExpr("x"), ">", NumberValue(12470.0)), IfExpr(RelOpExpr(IdentifierExpr("y"), ">", NumberValue(367.0)), StringValue("ティッピーゴールデンフラワリーオレンジペコ"), StringValue("あんこ")), StringValue("清川元夢"))
+      result.get mustEqual expected
+    }
+
     "print文を含むIf式をパースできる" in {
       val result = parser.parse(parser.stmt, "if (x > 12470) { println(\"ティッピーゴールデンフラワリーオレンジペコ\") } else { \"清川元夢\" }")
       val expected = IfExpr(RelOpExpr(IdentifierExpr("x"), ">", NumberValue(12470)), PrintlnStmt(StringValue("ティッピーゴールデンフラワリーオレンジペコ")), StringValue("清川元夢"))
