@@ -110,6 +110,29 @@ class ParserSpec extends Specification {
       result.get mustEqual expected
     }
 
+    "Assign文と式の組み合わせをパースできる" in {
+      val result = parser.parse(parser.stmts, "var x = \"Is the Order a Rabbit?\"; var y = \"ご注文はうさぎですか?\"")
+      val expected = Statements(AssignStmt("x",StringValue("Is the Order a Rabbit?")), AssignStmt("y",StringValue("ご注文はうさぎですか?")))
+      result.get mustEqual expected
+    }
+
+    "Assign文と式のちょっと複雑な組み合わせをパースできる" in {
+      val result = parser.parse(parser.stmts, "var x = \"Is the Order a Rabbit?\"; if (x > 12470) { println(\"ティッピーゴールデンフラワリーオレンジペコ\") } else { \"清川元夢\" }; var y = \"ご注文はうさぎですか?\"")
+      val expected =
+        Statements(
+          Statements(
+            AssignStmt("x",StringValue("Is the Order a Rabbit?")),
+            IfExpr(
+              RelOpExpr(IdentifierExpr("x"), ">", NumberValue(12470)),
+              PrintlnStmt(StringValue("ティッピーゴールデンフラワリーオレンジペコ")),
+              StringValue("清川元夢")
+            )
+          ),
+          AssignStmt("y",StringValue("ご注文はうさぎですか?"))
+        )
+      result.get mustEqual expected
+    }
+
   }
 
 }
