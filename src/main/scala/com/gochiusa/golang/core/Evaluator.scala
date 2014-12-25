@@ -5,9 +5,11 @@ class Evaluator {
     ast match {
       case Statements(left, right) => (left, right) match {
         case (left: DoNothingStmt, _) => eval(right, left.env)
-        case (_: StringValue, _) | (_: BooleanValue, _) | (_: NumberValue, _) => eval(left, env)
-        case (_, right: DoNothingStmt) => eval(left, env)
-        case (_, _) =>
+        case (left: AST, _) => eval(left, env) match {
+          case n: DoNothingStmt => eval(right, n.env)
+          case _ => eval(right, env)
+        }
+        case (_, right: AST) => eval(right, env)
       }
       case IfExpr(cond, cons, alt) => eval(cond, env) match {
         case true => eval(cons, env)
