@@ -19,7 +19,7 @@ class Parser extends JavaTokenParsers {
 
   def stms: Parser[AST] = assignStmt | expr
 
-  def assignStmt: Parser[AST] = varKeyword ~> ident ~ "=" ~ expr ^^ { case id ~ _ ~ exp => AssignStmt(id, exp)}
+  def assignStmt: Parser[AST] = varKeyword ~> ident ~ substituteKeyword ~ expr ^^ { case id ~ _ ~ exp => AssignStmt(id, exp)}
 
   def printlnStmt: Parser[AST] = printKeyword ~ "(" ~> expr ~ ")" ^^ { case expr ~ _ => PrintlnStmt(expr)}
 
