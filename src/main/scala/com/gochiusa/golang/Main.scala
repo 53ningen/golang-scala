@@ -1,6 +1,6 @@
 package com.gochiusa.golang
 
-import com.gochiusa.golang.core.{Evaluator, AST, Environment, Parser}
+import com.gochiusa.golang.core.{Evaluator, Parser, Environment}
 
 import scala.io.Source
 
