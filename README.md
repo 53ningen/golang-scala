@@ -66,8 +66,6 @@ golang> もふもふ("Hello, world!")
 
 go言語のコアはParserとEvaluatorからなります。
 
-### すまん！！時間が足りなかった！！！あとで追記します！！
-
 ## 第5羽 ココアと悪意なき殺意
 
 go言語とまったく関係はないのですが、どんなサイトを訪問しても「ご注文はうさぎですか? 第1羽」のページに飛ばされる便利なChrome拡張を作りました。一部のページでイベントが発火しない機能もついてます。[Chromeウェブストア](https://chrome.google.com/webstore/detail/%E3%82%B3%E3%82%B3%E3%82%A2%E3%81%A8%E6%82%AA%E6%84%8F%E3%81%AA%E3%81%8D%E6%AE%BA%E6%84%8F/cgompdgegcjimeaimlnimadoolpiacai)で無料配信中！[レポジトリ](https://github.com/53ningen/pyonpyon-extension)はこちらです。
@@ -179,7 +177,6 @@ golang> らんらん cocoa 希望？ ぴょんぴょん;心ぴょんぴょん待
 
 ## 第8羽 プールに濡れて　雨に濡れて涙に濡れて
 
-### すまん！！時間が足りなかった！！！あとで追記します！！
 
 ## 第9羽 青山herokuマウンテン
 
