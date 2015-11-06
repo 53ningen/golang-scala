@@ -8,14 +8,14 @@ import scala.io.Source
 object Main {
   def main (args: Array[String]): Unit = {
     val parser = new Parser {
-      override protected val ifKeyword = "心ぴょんぴょん待ち？"
-      override protected val elseKeyword = "ふわふわどきどき"
-      override protected val varKeyword = "らんらん"
-      override protected val substituteKeyword = "希望？"
-      override protected val whileKeyword = "マジ？"
-      override protected val printKeyword = "もふもふ"
-      override protected val trueKeyword = "ぴょんぴょん"
-      override protected val falseKeyword = "わわわ！"
+      override protected val ifKeyword = "if"
+      override protected val elseKeyword = "also"
+      override protected val varKeyword = "var"
+      override protected val substituteKeyword = "="
+      override protected val whileKeyword = "while"
+      override protected val printKeyword = "print"
+      override protected val trueKeyword = "true"
+      override protected val falseKeyword = "false"
     }
 
     val evaluator = new Evaluator
